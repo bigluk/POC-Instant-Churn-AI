@@ -108,8 +108,4 @@ def prepare_dataset(df):
     X = df.drop("y", axis=1)
     y = df["y"]
 
-    # Su alberi decisionali potremmo anche evitare questa operazione
-    # scaler = StandardScaler()
-    # X["balance"] = scaler.fit_transform(X[["balance"]])
-
     return X, y
