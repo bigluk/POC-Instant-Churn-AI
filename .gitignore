@@ -207,9 +207,6 @@ marimo/_lsp/
 __marimo__/
 
 /.idea
-/xgboost/*.png
-/logistic_regression/*.png
-
 
 ##### FRONTEND #####
 
