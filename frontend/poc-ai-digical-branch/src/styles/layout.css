@@ -1,0 +1,94 @@
+/* Global page layout */
+.page-container {
+    background: #f3f4f6;
+    min-height: 100vh;
+    padding: 24px;
+}
+
+/* Card box */
+.card {
+    background: white;
+    padding: 24px;
+    border-radius: 16px;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+    margin-bottom: 24px;
+}
+
+/* Titles */
+.section-title {
+    font-size: 20px;
+    font-weight: 600;
+    margin-bottom: 16px;
+}
+
+/* Grid layouts */
+.grid-5 {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+    gap: 12px;
+}
+
+.grid-2 {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+}
+
+.flex-row {
+    display: flex;
+    gap: 16px;
+}
+
+/* Inputs */
+.input {
+    border: 1px solid #ccc;
+    padding: 8px;
+    border-radius: 6px;
+    width: 100%;
+}
+
+/* Button */
+.btn {
+    background: #0d8f45;
+    color: white;
+    padding: 10px 18px;
+    border-radius: 6px;
+    border: none;
+    cursor: pointer;
+}
+
+/* Table */
+.table-container {
+    overflow-x: auto;
+}
+
+.table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.table thead {
+    background: #f0f0f0;
+    color: #666;
+    font-size: 14px;
+}
+
+.table th {
+    padding: 8px;
+}
+
+/* Filters panel */
+.filter-group {
+    margin-bottom: 20px;
+}
+
+.filter-label {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 6px;
+}
+
+.top-menu {
+    background-color: #0d8f45;
+}

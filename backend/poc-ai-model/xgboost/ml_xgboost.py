@@ -1,9 +1,8 @@
 import numpy as np
+from common_utils import fetch_dataset_from_csv, prepare_dataset, build_reports
 from imblearn.over_sampling import SMOTE
 from sklearn.model_selection import train_test_split, RandomizedSearchCV
 from xgboost import XGBClassifier
-
-from common_utils import fetch_dataset_from_csv, prepare_dataset, build_reports
 
 
 def apply_xg_boost(X, y, use_smote=False):

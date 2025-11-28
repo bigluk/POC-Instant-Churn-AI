@@ -1,9 +1,8 @@
+from common_utils import fetch_dataset_from_csv, prepare_dataset, build_reports
 from sklearn.linear_model import LogisticRegression
 from sklearn.metrics import make_scorer, f1_score
 from sklearn.model_selection import train_test_split, GridSearchCV
 from sklearn.preprocessing import StandardScaler
-
-from common_utils import fetch_dataset_from_csv, prepare_dataset, build_reports
 
 
 def apply_logistic_regression(X, y, optimize=False):
