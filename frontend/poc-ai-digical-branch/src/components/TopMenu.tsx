@@ -16,7 +16,7 @@ const TopMenu = () => {
 
                 <Navbar.Collapse id="basic-navbar-nav">
                     <Nav className="ms-auto align-items-center">
-                        <Nav.Link href="#"><FaBrain /> Investment Propensity</Nav.Link>
+                        <Nav.Link href="/investment-propensity"><FaBrain /> Investment Propensity</Nav.Link>
                         <Nav.Link href="#"><FaUser /> Admin Admin</Nav.Link>
                         <Nav.Link href="#"><FaKey /></Nav.Link>
                         <Nav.Link href="#"><FaUniversity /> 10000</Nav.Link>

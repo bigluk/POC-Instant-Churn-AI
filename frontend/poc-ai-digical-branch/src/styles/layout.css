@@ -92,3 +92,7 @@
 .top-menu {
     background-color: #0d8f45;
 }
+
+.green-row td {
+  background-color: #0d8f4519 !important;
+}
