@@ -2,7 +2,7 @@ import "../styles/layout.css";
 
 export default function FiltersPanel() {
   return (
-    <div className="card" style={{ width: "350px" }}>
+    <div className="card" style={{ width: "350px", minHeight: "500px"}}>
       <h2 className="section-title">Authorizations view</h2>
       <p style={{ color: "#6b7280", fontSize: "14px", marginBottom: "20px" }}>
         Filter authorization view
