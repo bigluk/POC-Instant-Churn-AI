@@ -5,24 +5,18 @@ import csv
 
 
 def generate_balanced_balance(sample, balance_stats, balance_by_job, balance_by_education):
-    """
-    Genera un valore balance realistico basato sulle statistiche reali
-    e sulle correlazioni con altre variabili
-    """
-    # Base: distribuzione normale basata sulle statistiche reali
     base_balance = np.random.normal(balance_stats[2], balance_stats[3])
 
-    # Aggiusta in base al lavoro (se disponibile nei dati reali)
     if sample['job'] in balance_by_job:
         job_adjustment = balance_by_job[sample['job']] - balance_stats[2]
-        base_balance += job_adjustment * 0.5  # Applica parzialmente la correlazione
+        base_balance += job_adjustment * 0.5  # Partially applies the correlation
 
-    # Aggiusta in base all'educazione (se disponibile nei dati reali)
+    # Adjust for education (if available in real data)
     if sample['education'] in balance_by_education:
         education_adjustment = balance_by_education[sample['education']] - balance_stats[2]
         base_balance += education_adjustment * 0.3
 
-    # Aggiusta in base all'età (tendenza generale)
+    # Adjust for age (general trend)
     if sample['age'] < 25:
         base_balance *= 0.7
     elif sample['age'] < 35:
@@ -30,27 +24,22 @@ def generate_balanced_balance(sample, balance_stats, balance_by_job, balance_by_
     elif sample['age'] > 55:
         base_balance *= 1.1
 
-    # Aggiusta in base al default
     if sample['default'] == 'yes':
         base_balance *= 0.3
     elif sample['default'] == 'unknown':
         base_balance *= 0.8
 
-    # Aggiusta in base al housing loan
     if sample['housing'] == 'yes':
         base_balance *= 0.9
 
-    # Mantieni nei limiti realistici
     balance_value = max(balance_stats[0], min(balance_stats[1], base_balance))
-
     return int(balance_value)
 
 
-# Prepara i dati per la generazione sintetica
 def generate_synthetic_samples(original_df, num_samples=20000):
     synthetic_data = []
 
-    # Distribuzioni dalle variabili categoriche
+    # Distributions of categorical variables
     job_dist = original_df['job'].value_counts(normalize=True)
     marital_dist = original_df['marital'].value_counts(normalize=True)
     education_dist = original_df['education'].value_counts(normalize=True)
@@ -62,7 +51,7 @@ def generate_synthetic_samples(original_df, num_samples=20000):
     day_dist = original_df['day'].value_counts(normalize=True)
     poutcome_dist = original_df['poutcome'].value_counts(normalize=True)
 
-    # Statistiche per variabili numeriche
+    # Statistics for numeric variables
     age_stats = (original_df['age'].min(), original_df['age'].max(), original_df['age'].mean(),
                  original_df['age'].std())
     duration_stats = (original_df['duration'].min(), original_df['duration'].max(), original_df['duration'].mean(),
@@ -72,12 +61,11 @@ def generate_synthetic_samples(original_df, num_samples=20000):
     balance_stats = (original_df['balance'].min(), original_df['balance'].max(), original_df['balance'].mean(),
                      original_df['balance'].std())
 
-    # Analizza correlazioni tra balance e altre variabili
+    # Analyze correlations between balance and other variables
     balance_by_job = original_df.groupby('job')['balance'].mean()
     balance_by_education = original_df.groupby('education')['balance'].mean()
 
     for _ in range(num_samples):
-        # Genera campione sintetico mantenendo le distribuzioni
         sample = {
             'age': max(18, min(95, int(np.random.normal(age_stats[2], age_stats[3])))),
             'job': np.random.choice(job_dist.index, p=job_dist.values),
@@ -91,13 +79,13 @@ def generate_synthetic_samples(original_df, num_samples=20000):
             'month': np.random.choice(month_dist.index, p=month_dist.values),
             'duration': max(0, int(np.random.normal(duration_stats[2], duration_stats[3]))),
             'campaign': max(1, min(50, int(np.random.normal(campaign_stats[2], campaign_stats[3])))),
-            'pdays': 999,  # Valore più comune
-            'previous': 0,  # Valore più comune
+            'pdays': 999,
+            'previous': 0,
             'poutcome': np.random.choice(poutcome_dist.index, p=poutcome_dist.values),
             'y': 'yes'
         }
 
-        # Genera balance realistico basato sulle statistiche reali
+        # Realistic balance generation based on real statistics
         balance_value = generate_balanced_balance(sample, balance_stats, balance_by_job, balance_by_education)
         sample_with_balance = {}
         for key in sample.keys():
@@ -105,7 +93,7 @@ def generate_synthetic_samples(original_df, num_samples=20000):
             if key == 'default':
                 sample_with_balance['balance'] = int(balance_value)  # aggiungi balance dopo default
 
-        # Aggiusta correlazioni (es: età e lavoro)
+        # Adjust correlations (e.g., age and job)
         if sample_with_balance['age'] > 50 and sample_with_balance['job'] == 'student':
             sample_with_balance['job'] = np.random.choice(['retired', 'admin.', 'technician'])
         if sample_with_balance['age'] < 25 and sample_with_balance['job'] == 'retired':
@@ -117,39 +105,17 @@ def generate_synthetic_samples(original_df, num_samples=20000):
 
 
 if __name__ == '__main__':
-    # Leggi i dati originali
     base_path = '\\csv'
     df_original = pd.read_csv('%s\\bank-full.csv' % base_path, delimiter=';', quoting=csv.QUOTE_NONNUMERIC)
     df_yes = df_original[df_original['y'] == "yes"]
 
-    # Genera i dati sintetici
-    print("Generando campioni sintetici...")
     df_synthetic = generate_synthetic_samples(df_yes, 20000)
-
-    '''
-    # Salva il file CSV
-    output_filename = '%s\\synthetic_yes_samples.csv' % base_path
-    df_synthetic.to_csv(output_filename, sep=';', index=False, quoting=csv.QUOTE_NONNUMERIC)
-    '''
-
-    print(f"Dimensione dataset sintetico: {len(df_synthetic)} campioni")
-    print(f"Colonne: {df_synthetic.columns.tolist()}")
-
-    # -------------------------------
-    # Crea dataset bilanciato
-    # -------------------------------
-    # Unisci dataset originale + sintetico
-    cols_int = ['age', 'balance', 'duration', 'campaign', 'day', 'pdays', 'previous']  # esempio
+    cols_int = ['age', 'balance', 'duration', 'campaign', 'day', 'pdays', 'previous']
     df_synthetic[cols_int] = df_synthetic[cols_int].astype('int64')
     df_original[cols_int] = df_original[cols_int].astype('int64')
-    df_balanced = pd.concat([df_original, df_synthetic], ignore_index=True)
 
-    # Shuffle del dataset
+    df_balanced = pd.concat([df_original, df_synthetic], ignore_index=True)
     df_balanced = df_balanced.sample(frac=1, random_state=42).reset_index(drop=True)
 
-    # Salvataggio del dataset bilanciato
     balanced_filename = f'{base_path}\\bank-full-balanced.csv'
     df_balanced.to_csv(balanced_filename, sep=';', index=False, quoting=csv.QUOTE_NONNUMERIC)
-
-    print(f"Dataset bilanciato creato: '{balanced_filename}'")
-    print(f"Totale righe finali: {len(df_balanced)}")

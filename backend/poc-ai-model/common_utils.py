@@ -11,9 +11,6 @@ from ucimlrepo import fetch_ucirepo
 
 def fetch_dataset_from_csv(file_name):
     df = pd.read_csv(file_name, delimiter=';', quoting=csv.QUOTE_NONNUMERIC)
-    print(df["y"].value_counts())
-    # df = df.sample(frac=1).reset_index(drop=True)   # mescolamento delle righe
-    # df.to_csv("bank-ok.csv", sep=';', index=False, quoting=csv.QUOTE_NONNUMERIC)
     return df[["age", "job", "marital", "education", "default", "balance", "housing", "loan", "y"]]
 
 
@@ -25,15 +22,7 @@ def fetch_dataset_from_internet():
     X = bank_marketing.data.features
     y = bank_marketing.data.targets
 
-    # metadata
-    # print(bank_marketing.metadata)
-    # variable information
-    # print(bank_marketing.variables)
-
-    # unisci X e y in un unico DataFrame
     df = pd.concat([X, y], axis=1)
-
-    # seleziona solo le colonne richieste
     return df[["age", "job", "marital", "education", "default", "balance", "housing", "loan", "y"]]
 
 
@@ -51,17 +40,15 @@ def plot_umap_2d(X, y, title="UMAP Projection (2D)"):
 
 
 def build_reports(y_pred, y_test):
-    # Metriche
     print("Accuracy:", accuracy_score(y_test, y_pred))
     print("\nConfusion Matrix:\n", confusion_matrix(y_test, y_pred))
     print("\nClassification Report:\n", classification_report(y_test, y_pred))
 
-    # Calcolo metriche
     acc = accuracy_score(y_test, y_pred)
     cm = confusion_matrix(y_test, y_pred)
     report = classification_report(y_test, y_pred, output_dict=True)
 
-    # --- GRAFICO CONFUSION MATRIX ---
+    # --- CONFUSION MATRIX ---
     plt.figure(figsize=(8, 6))
     sns.heatmap(cm, annot=True, fmt='d', cmap='Blues', cbar=False,
                 xticklabels=np.unique(y_test),
@@ -73,7 +60,7 @@ def build_reports(y_pred, y_test):
     plt.savefig("confusion_matrix.png", dpi=300)
     plt.show()
 
-    # --- GRAFICO CLASSIFICATION REPORT ---
+    # --- CLASSIFICATION REPORT ---
     report_df = pd.DataFrame(report).transpose().round(2)
 
     plt.figure(figsize=(8, 4))
@@ -90,22 +77,50 @@ def save_into_csv(X, y):
 
 
 def prepare_dataset(df):
-    # Trasformiamo yes/no → 1/0
     binary_cols = ["default", "housing", "loan", "y"]
     df[binary_cols] = df[binary_cols].map(lambda x: 1 if x == "yes" else 0)
 
-    # Creiamo fasce d’età
     bins = [0, 25, 35, 50, 65, 100]
     labels = ["<25", "25-35", "36-50", "51-65", "65+"]
     df["age_group"] = pd.cut(df["age"], bins=bins, labels=labels, right=False)
     df = df.drop("age", axis=1)
 
-    # One-Hot Encoding per le variabili categoriche
+    # One-Hot Encoding
     categorical_cols = ["job", "marital", "education", "age_group"]
     df = pd.get_dummies(df, columns=categorical_cols, drop_first=True, dtype=int)
 
-    # (opzionale) separiamo X e y
     X = df.drop("y", axis=1)
     y = df["y"]
 
     return X, y
+
+
+def prepare_sample(df):
+    df = df.copy()
+
+    binary_cols = ["default", "housing", "loan"]
+    df[binary_cols] = df[binary_cols].map(lambda x: 1 if x == "yes" else 0)
+
+    bins = [0, 25, 35, 50, 65, 100]
+    labels = ["<25", "25-35", "36-50", "51-65", "65+"]
+    df["age_group"] = pd.cut(df["age"], bins=bins, labels=labels, right=False)
+    df = df.drop("age", axis=1)
+
+    # One-Hot encoding
+    categorical_cols = ["job", "marital", "education", "age_group"]
+    df = pd.get_dummies(df, columns=categorical_cols, drop_first=False, dtype=int)
+
+    # Generated columns during model training phase
+    expected_columns = ['default', 'balance', 'housing', 'loan', 'job_blue-collar',
+                        'job_entrepreneur', 'job_housemaid', 'job_management', 'job_retired',
+                        'job_self-employed', 'job_services', 'job_student', 'job_technician',
+                        'job_unemployed', 'job_unknown', 'marital_married', 'marital_single',
+                        'education_secondary', 'education_tertiary', 'education_unknown',
+                        'age_group_25-35', 'age_group_36-50', 'age_group_51-65',
+                        'age_group_65+']
+    for col in expected_columns:
+        if col not in df.columns:
+            df[col] = 0
+
+    df = df[expected_columns]
+    return df
