@@ -1,83 +1,85 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Container, Table, Form, Button } from "react-bootstrap";
+import { FaCheck, FaTimes } from "react-icons/fa";
+import type { User } from "../types/User";
+import { Link } from "react-router-dom";
 
-// Define User type
-interface User {
-    id: string
-    firstName: string;
-    lastName: string;
-    birthDate: string;
-    age: number;
-    investmentPropensity: number; // numeric for sorting/filtering
-    phone: string;
-    email: string;
-}
 
-// Sorting configuration type
 interface SortConfig {
     key: keyof User | null;
     direction: "asc" | "desc";
 }
 
-// Filter type
 interface FilterConfig {
     min: string;
     max: string;
 }
 
-// Sample data
-const initialUsers: User[] = [
-    { id: "658238", firstName: "John", lastName: "Doe", birthDate: "15-05-1990", age: 33, investmentPropensity: 45, phone: "+1 555-1234", email: "john.doe@example.com" },
-    { id: "909098", firstName: "Emma", lastName: "Smith", birthDate: "30-09-1985", age: 38, investmentPropensity: 70, phone: "+1 555-5678", email: "emma.smith@example.com" },
-    { id: "732781", firstName: "Michael", lastName: "Johnson", birthDate: "12-01-2000", age: 23, investmentPropensity: 55, phone: "+1 555-9012", email: "michael.johnson@example.com" },
-    { id: "451239", firstName: "Sophia", lastName: "Brown", birthDate: "22-07-1992", age: 31, investmentPropensity: 60, phone: "+1 555-2345", email: "sophia.brown@example.com" },
-    { id: "672314", firstName: "Liam", lastName: "Davis", birthDate: "03-03-1988", age: 35, investmentPropensity: 50, phone: "+1 555-6789", email: "liam.davis@example.com" },
-    { id: "984321", firstName: "Olivia", lastName: "Martinez", birthDate: "14-11-1995", age: 28, investmentPropensity: 75, phone: "+1 555-3456", email: "olivia.martinez@example.com" },
-    { id: "120987", firstName: "Noah", lastName: "Garcia", birthDate: "25-02-1999", age: 24, investmentPropensity: 65, phone: "+1 555-7890", email: "noah.garcia@example.com" },
-    { id: "876543", firstName: "Ava", lastName: "Wilson", birthDate: "18-08-1987", age: 36, investmentPropensity: 40, phone: "+1 555-0123", email: "ava.wilson@example.com" },
-    { id: "334455", firstName: "Ethan", lastName: "Anderson", birthDate: "09-06-2001", age: 22, investmentPropensity: 55, phone: "+1 555-4567", email: "ethan.anderson@example.com" }
-];
-
 const UserTable: React.FC = () => {
-    const [users, setUsers] = useState<User[]>(initialUsers);
+    const [users, setUsers] = useState<User[]>([]);
+    const [allUsers, setAllUsers] = useState<User[]>([]);
     const [sortConfig, setSortConfig] = useState<SortConfig>({ key: null, direction: "asc" });
     const [filter, setFilter] = useState<FilterConfig>({ min: "", max: "" });
+    const [loading, setLoading] = useState(true);
 
-    // Sorting function
+    useEffect(() => {
+        const fetchUsers = async () => {
+            try {
+                const res = await fetch("/api/fetch-users");
+                const data = await res.json();
+
+                setUsers(data);
+                setAllUsers(data);
+            } catch (error) {
+                console.error("Error during users fetching:", error);
+            } finally {
+                setLoading(false);
+            }
+        };
+
+        fetchUsers();
+    }, []);
+
     const sortData = (key: keyof User) => {
         let direction: "asc" | "desc" = "asc";
         if (sortConfig.key === key && sortConfig.direction === "asc") {
             direction = "desc";
         }
-        setSortConfig({ key, direction });
 
         const sorted = [...users].sort((a, b) => {
-            if (key === "investmentPropensity" || key === "age") {
-                return direction === "asc" ? a[key] - b[key] : b[key] - a[key];
-            } else {
+            if (typeof a[key] === "number") {
                 return direction === "asc"
-                    ? String(a[key]).localeCompare(String(b[key]))
-                    : String(b[key]).localeCompare(String(a[key]));
+                    ? (a[key] as number) - (b[key] as number)
+                    : (b[key] as number) - (a[key] as number);
             }
+            return direction === "asc"
+                ? String(a[key]).localeCompare(String(b[key]))
+                : String(b[key]).localeCompare(String(a[key]));
         });
 
+        setSortConfig({ key, direction });
         setUsers(sorted);
     };
 
-    // Filter function
     const applyFilter = () => {
         const min = filter.min ? parseInt(filter.min, 10) : 0;
         const max = filter.max ? parseInt(filter.max, 10) : 100;
-        const filtered = initialUsers.filter(
-            (user) => user.investmentPropensity >= min && user.investmentPropensity <= max
+
+        const filtered = allUsers.filter(
+            (user) =>
+                user.investmentPropensity >= min &&
+                user.investmentPropensity <= max
         );
+
         setUsers(filtered);
     };
 
     const resetFilter = () => {
         setFilter({ min: "", max: "" });
-        setUsers(initialUsers);
+        setUsers(allUsers);
     };
+
+    if (loading) return <Container className="mt-2">Loading...</Container>;
 
     return (
         <Container className="mt-4">
@@ -113,40 +115,46 @@ const UserTable: React.FC = () => {
             <Table bordered hover>
                 <thead>
                     <tr>
-                        <th onClick={() => sortData("id")} style={{ cursor: "pointer" }}>
-                            Customer ID {sortConfig.key === "id" ? (sortConfig.direction === "asc" ? "▲" : "▼") : ""}
+                        <th onClick={() => sortData("id")}>ID</th>
+                        <th onClick={() => sortData("firstName")}>First Name</th>
+                        <th onClick={() => sortData("lastName")}>Last Name</th>
+                        <th>Age</th>
+                        <th>Phone</th>
+                        <th>Email</th>
+                        <th>Balance</th>
+                        <th onClick={() => sortData("investmentPropensity")}>
+                            Investment Propensity
                         </th>
-                        <th onClick={() => sortData("firstName")} style={{ cursor: "pointer" }}>
-                            First Name {sortConfig.key === "firstName" ? (sortConfig.direction === "asc" ? "▲" : "▼") : ""}
-                        </th>
-                        <th onClick={() => sortData("lastName")} style={{ cursor: "pointer" }}>
-                            Last Name {sortConfig.key === "lastName" ? (sortConfig.direction === "asc" ? "▲" : "▼") : ""}
-                        </th>
-                        <th>Birth Date</th>
-                        <th onClick={() => sortData("age")} style={{ cursor: "pointer" }}>
-                            Age {sortConfig.key === "age" ? (sortConfig.direction === "asc" ? "▲" : "▼") : ""}
-                        </th>
-                        <th>Phone Number</th>
-                        <th onClick={() => sortData("email")} style={{ cursor: "pointer" }}>
-                            Email {sortConfig.key === "email" ? (sortConfig.direction === "asc" ? "▲" : "▼") : ""}
-                        </th>
-                        <th onClick={() => sortData("investmentPropensity")} style={{ cursor: "pointer" }}>
-                            Investment Propensity (IP) {sortConfig.key === "investmentPropensity" ? (sortConfig.direction === "asc" ? "▲" : "▼") : ""}
-                        </th>
+                        <th>Inclined to Invest</th>
                     </tr>
                 </thead>
-                <tbody>
-                    {users.map((user, index) => (
-                        <tr className={index % 2 !== 0 ? 'green-row' : ''} key={index}>
-                            <td>{user.id}</td>
-                            <td>{user.firstName}</td>
-                            <td>{user.lastName}</td>
-                            <td>{user.birthDate}</td>
-                            <td>{user.age}</td>
-                            <td>{user.phone}</td>
-                            <td>{user.email}</td>
-                            <td>{user.investmentPropensity}%</td>
 
+                <tbody>
+                    {users.map((u, index) => (
+                        <tr key={u.id} className={index % 2 !== 0 ? 'green-row' : ''}>
+                            <td>
+                                <Link
+                                    to={`/dashboard/${u.id}`}
+                                    style={{
+                                        cursor: "pointer",
+                                        color: "#0d6efd",
+                                        textDecoration: "underline",
+                                        fontWeight: 600
+                                    }}
+                                >
+                                    {u.id}
+                                </Link>
+                            </td>
+                            <td>{u.firstName}</td>
+                            <td>{u.lastName}</td>
+                            <td>{u.age}</td>
+                            <td>{u.phoneNumber}</td>
+                            <td>{u.email}</td>
+                            <td>{u.balance}</td>
+                            <td>{u.investmentPropensity}%</td>
+                            <td>{u.prediction === 1 ? (
+                                <FaCheck color="green" />) : (<FaTimes color="red" />)}
+                            </td>
                         </tr>
                     ))}
                 </tbody>

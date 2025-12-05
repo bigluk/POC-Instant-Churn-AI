@@ -31,7 +31,7 @@ export default function App() {
         />
 
         {/* La pagina che vuoi mostrare → /dashboard/123 */}
-        <Route path="/dashboard/:idUser" element={<CustomerDashboard />} />
+        <Route path="/dashboard/:userId" element={<CustomerDashboard />} />
         <Route path="/investment-propensity" element={<InvestmentPropensityDashboard />} />
       </Routes>
     </BrowserRouter>
