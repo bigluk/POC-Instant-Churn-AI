@@ -1,17 +1,17 @@
 export interface User {
     id: string;
-    firstName: string;
-    lastName: string;
+    first_name: string;
+    last_name: string;
     email: string;
-    phoneNumber: string;
+    phone_number: string;
     age: number;
     job: string;
     marital: string;
     education: string;
-    default: string;
+    default_status: string;
     balance: number;
     housing: string;
     loan: string;
-    investmentPropensity: number;
+    investment_propensity: number;
     prediction: number;
 }

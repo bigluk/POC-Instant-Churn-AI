@@ -17,7 +17,7 @@ export const InvestmentPropensity: React.FC = () => {
                     <img src={aiIcon} alt="Investment Propensity Model" className="img-fluid" style={{ height: "60px" }} />
                 </div>
                 <div className="mt-3">
-                    <strong>{user?.investmentPropensity}%</strong>
+                    <strong>{user?.investment_propensity}%</strong>
                 </div>
             </Card>
         </div>
@@ -143,13 +143,13 @@ const CustomerDashboard: React.FC = () => {
         fetchUserById();
     }, []);
 
-    if (loading) return <div>Loading...</div>;
+    if (loading) return <Container className="mt-4">Loading...</Container>;
 
     return (
         <UserContext.Provider value={user}>
             <Container className="mt-4">
                 <h3 className="mb-4">
-                    {user?.firstName} {user?.lastName}
+                    {user?.first_name} {user?.last_name}
                 </h3>
 
                 <Row>

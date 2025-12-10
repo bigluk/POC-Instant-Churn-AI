@@ -1,9 +1,9 @@
 import React, { useState, useEffect } from "react";
-import { Container, Table, Form, Button } from "react-bootstrap";
+import { Container, Table, Form, Button, Modal } from "react-bootstrap";
 import { FaCheck, FaTimes } from "react-icons/fa";
 import type { User } from "../types/User";
 import { Link } from "react-router-dom";
-
+import UserChart from "../components/UserChart";
 
 interface SortConfig {
     key: keyof User | null;
@@ -21,6 +21,10 @@ const UserTable: React.FC = () => {
     const [sortConfig, setSortConfig] = useState<SortConfig>({ key: null, direction: "asc" });
     const [filter, setFilter] = useState<FilterConfig>({ min: "", max: "" });
     const [loading, setLoading] = useState(true);
+    const [chartData, setChartData] = useState<any[]>([]);
+    const [selectedUser, setSelectedUser] = useState<string | null>(null);
+    const [showChartModal, setShowChartModal] = useState(false);
+
 
     useEffect(() => {
         const fetchUsers = async () => {
@@ -66,9 +70,7 @@ const UserTable: React.FC = () => {
         const max = filter.max ? parseInt(filter.max, 10) : 100;
 
         const filtered = allUsers.filter(
-            (user) =>
-                user.investmentPropensity >= min &&
-                user.investmentPropensity <= max
+            (user) => user.investment_propensity >= min && user.investment_propensity <= max
         );
 
         setUsers(filtered);
@@ -78,6 +80,19 @@ const UserTable: React.FC = () => {
         setFilter({ min: "", max: "" });
         setUsers(allUsers);
     };
+
+    const handleRowClick = async (userId: string) => {
+        setSelectedUser(userId);
+        try {
+            const res = await fetch(`/api/chart/${userId}`);
+            const data = await res.json();
+            setChartData(data);
+            setShowChartModal(true);
+        } catch (err) {
+            console.error("Errore caricamento grafico", err);
+        }
+    };
+
 
     if (loading) return <Container className="mt-2">Loading...</Container>;
 
@@ -104,61 +119,71 @@ const UserTable: React.FC = () => {
                     />
                 </Form.Group>
 
-                <Button variant="success" onClick={applyFilter}>
-                    Apply Filter
-                </Button>
-                <Button variant="secondary" onClick={resetFilter}>
-                    Reset
-                </Button>
+                <Button variant="success" onClick={applyFilter}>Apply Filter</Button>
+                <Button variant="secondary" onClick={resetFilter}>Reset</Button>
             </Form>
 
             <Table bordered hover>
                 <thead>
                     <tr>
                         <th onClick={() => sortData("id")}>ID</th>
-                        <th onClick={() => sortData("firstName")}>First Name</th>
-                        <th onClick={() => sortData("lastName")}>Last Name</th>
+                        <th onClick={() => sortData("first_name")}>First Name</th>
+                        <th onClick={() => sortData("last_name")}>Last Name</th>
                         <th>Age</th>
                         <th>Phone</th>
                         <th>Email</th>
                         <th>Balance</th>
-                        <th onClick={() => sortData("investmentPropensity")}>
-                            Investment Propensity
-                        </th>
+                        <th onClick={() => sortData("investment_propensity")}>Investment Propensity (IP)</th>
                         <th>Inclined to Invest</th>
                     </tr>
                 </thead>
 
                 <tbody>
                     {users.map((u, index) => (
-                        <tr key={u.id} className={index % 2 !== 0 ? 'green-row' : ''}>
+                        <tr
+                            key={u.id}
+                            className={index % 2 !== 0 ? "green-row" : ""}
+                            style={{ cursor: "pointer" }}
+                            onClick={() => handleRowClick(u.id)}
+                        >
                             <td>
                                 <Link
                                     to={`/dashboard/${u.id}`}
-                                    style={{
-                                        cursor: "pointer",
-                                        color: "#0d6efd",
-                                        textDecoration: "underline",
-                                        fontWeight: 600
-                                    }}
+                                    style={{ color: "#0d6efd", textDecoration: "underline", fontWeight: 600 }}
+                                    onClick={(e) => e.stopPropagation()}
                                 >
                                     {u.id}
                                 </Link>
                             </td>
-                            <td>{u.firstName}</td>
-                            <td>{u.lastName}</td>
+                            <td>{u.first_name}</td>
+                            <td>{u.last_name}</td>
                             <td>{u.age}</td>
-                            <td>{u.phoneNumber}</td>
+                            <td>{u.phone_number}</td>
                             <td>{u.email}</td>
                             <td>{u.balance}</td>
-                            <td>{u.investmentPropensity}%</td>
-                            <td>{u.prediction === 1 ? (
-                                <FaCheck color="green" />) : (<FaTimes color="red" />)}
-                            </td>
+                            <td>{u.investment_propensity}%</td>
+                            <td>{u.prediction === 1 ? <FaCheck color="green" /> : <FaTimes color="red" />}</td>
                         </tr>
                     ))}
                 </tbody>
             </Table>
+
+            <Modal
+                show={showChartModal}
+                onHide={() => setShowChartModal(false)}
+                size="xl"
+                centered
+            >
+                <Modal.Header closeButton>
+                    <Modal.Title>Investment Propensity Trend for User {selectedUser}</Modal.Title>
+                </Modal.Header>
+
+                <Modal.Body>
+                    <UserChart data={chartData} userId={selectedUser!} />
+                </Modal.Body>
+            </Modal>
+
+
         </Container>
     );
 };

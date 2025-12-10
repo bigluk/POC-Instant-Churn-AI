@@ -105,7 +105,7 @@ def generate_synthetic_samples(original_df, num_samples=20000):
 
 
 if __name__ == '__main__':
-    base_path = '\\csv'
+    base_path = 'csv'
     df_original = pd.read_csv('%s\\bank-full.csv' % base_path, delimiter=';', quoting=csv.QUOTE_NONNUMERIC)
     df_yes = df_original[df_original['y'] == "yes"]
 

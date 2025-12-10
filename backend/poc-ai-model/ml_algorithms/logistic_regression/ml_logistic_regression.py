@@ -4,7 +4,7 @@ from sklearn.metrics import make_scorer, f1_score
 from sklearn.model_selection import train_test_split, GridSearchCV
 from sklearn.preprocessing import StandardScaler
 
-from common_utils import fetch_dataset_from_csv, prepare_dataset, build_reports
+from ml_algorithms.utils import build_reports, fetch_dataset_from_csv, prepare_dataset
 
 
 def apply_logistic_regression(X, y):

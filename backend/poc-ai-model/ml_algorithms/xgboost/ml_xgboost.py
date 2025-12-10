@@ -2,7 +2,7 @@ import joblib
 from sklearn.model_selection import train_test_split, RandomizedSearchCV
 from xgboost import XGBClassifier
 
-from common_utils import fetch_dataset_from_csv, prepare_dataset, build_reports
+from ml_algorithms.utils import fetch_dataset_from_csv, build_reports, prepare_dataset
 
 
 def apply_xg_boost(X, y):
