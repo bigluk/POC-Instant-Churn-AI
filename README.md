@@ -11,7 +11,7 @@ git clone https://github.com/bigluk/POC-Instant-Churn-AI.git
 # 🛠 Backend
 ## 🔧 Creazione ambiente virtuale
 
-Apri il terminale nella directory <i>/POC-Instant-Churn-AI-master/backend/poc-ai-model/</i> e digita i seguenti comandi:
+Apri il terminale nella directory <i>/backend/poc-ai-model/</i> e digita i seguenti comandi:
 ```
 python3 -m venv .venv
 .\.venv\Scripts\activate
@@ -20,7 +20,7 @@ pip install -r requirements.txt
 
 ## 🐘 Installazione Database Postgres + PgAdmin (Docker)
 
-Apri il terminale in: <i>/POC-Instant-Churn-AI-master/backend/poc-ai-model/poc-ai-digical-branch</i> e avvia i container tramite Docker Compose:
+Apri il terminale in: <i>/backend/poc-ai-model/poc-ai-digical-branch</i> e avvia i container tramite Docker Compose:
 
 `docker compose up -d`
 
@@ -33,17 +33,17 @@ Apri il browser e vai su: http://localhost:8080
 
 Accedi a PgAdmin utilizzando le credenziali definite nel docker-compose.yml.
 
-Esegui lo script SQL situato in <i>/POC-Instant-Churn-AI-master/backend/poc-ai-model/poc-ai-digical-branch/query.sql</i>
+Esegui lo script SQL situato in <i>/backend/poc-ai-model/poc-ai-digical-branch/query.sql</i>
 
 ## ▶️ Avvio del server FastAPI
 
-Sempre nella directory <i>/POC-Instant-Churn-AI-master/backend/poc-ai-model/poc-ai-digical-branch</i> digita il comando:
+Sempre nella directory <i>/backend/poc-ai-model/poc-ai-digical-branch</i> digita il comando:
 
 `uvicorn main:app --reload`
 
 # 🎨 Frontend
 
-Apri il terminale nella directory <i>/POC-Instant-Churn-AI-master/frontend/poc-ai-digical-branch</i> ed esegui:
+Apri il terminale nella directory <i>/frontend/poc-ai-digical-branch</i> ed esegui:
 ```
 npm install
 npm run dev
