@@ -11,7 +11,7 @@ def get_model_path() -> str:
     return os.path.join(
         base_project,
         "ml_algorithms",
-        "xgboost",
+        "ml_xgboost",
         "xg-boost-model.pkl"
     )
 

@@ -1,13 +1,13 @@
-import csv
 import os
+
 import matplotlib.pyplot as plt
 import pandas as pd
-from keras.models import Sequential
 from keras.layers import Dense
-from scikeras.wrappers import KerasClassifier
-from sklearn.model_selection import StratifiedKFold, cross_val_score, train_test_split
+from keras.models import Sequential
 from sklearn.metrics import confusion_matrix, classification_report
+from sklearn.model_selection import train_test_split
 
+from utils import prepare_dataset, fetch_dataset_from_csv
 
 
 def create_model():
@@ -40,30 +40,7 @@ def loadDataframeFromCSV (folderName: str, fileName: str) -> pd.DataFrame:
         print(f"Unexpected exception during csv reading: {e}")
 
 
-def prepare_dataset(df):
-    # Trasformiamo yes/no → 1/0
-    binary_cols = ["default", "housing", "loan", "y"]
-    df[binary_cols] = df[binary_cols].map(lambda x: 1 if x == "yes" else 0)
-
-    # Creiamo fasce d’età
-    bins = [0, 25, 35, 50, 65, 100]
-    labels = ["<25", "25-35", "36-50", "51-65", "65+"]
-    df["age_group"] = pd.cut(df["age"], bins=bins, labels=labels, right=False)
-    df = df.drop("age", axis=1)
-
-    # One-Hot Encoding per le variabili categoriche
-    categorical_cols = ["job", "marital", "education", "age_group"]
-    df = pd.get_dummies(df, columns=categorical_cols, drop_first=True, dtype=int)
-
-    # (opzionale) separiamo X e y
-    X = df.drop("y", axis=1)
-    y = df["y"]
-
-    return X, y
-
-
 def trainAnn(x, y):
-
     x_train, x_test, y_train, y_test = train_test_split(x, y, test_size=0.3, random_state=42)
 
     classifier = create_model()
@@ -103,13 +80,6 @@ def plotAccuracyAndLoss(history):
     plt.legend(['train','validation'], loc='upper right')
     plt.draw()
     plt.pause(0.001) # Pausa breve per aggiornare l'interfaccia
-
-def fetch_dataset_from_csv(file_name):
-    df = pd.read_csv(file_name, delimiter=';', quoting=csv.QUOTE_NONNUMERIC)
-    print(df["y"].value_counts())
-    # df = df.sample(frac=1).reset_index(drop=True)   # mescolamento delle righe
-    # df.to_csv("bank-ok.csv", sep=';', index=False, quoting=csv.QUOTE_NONNUMERIC)
-    return df[["age", "job", "marital", "education", "default", "balance", "housing", "loan", "y"]]
 
 
 def evaluate_model(model, x_test, y_test):
