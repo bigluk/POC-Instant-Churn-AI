@@ -11,10 +11,10 @@ class UserService:
         self.propensity_repo = PropensityRepository()
         self.prediction_service = PredictionService()
 
-    def get_enriched_user(self, user_id: str) -> Optional[Dict]:
+    def get_user(self, user_id: str) -> Optional[Dict]:
         return self.user_repo.get_user_by_id(user_id)
 
-    def get_all_enriched_users(self) -> List[Dict]:
+    def get_all_users(self) -> List[Dict]:
         return self.user_repo.get_all_users()
 
     def update_user_propensity(self, user_id: str, propensity: float):

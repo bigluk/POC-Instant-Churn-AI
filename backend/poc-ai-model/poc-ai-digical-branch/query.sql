@@ -57,3 +57,35 @@ INSERT INTO ISBD_USERS (id, first_name, last_name, email, phone_number, age, job
 (599012, 'Evelyn', 'Fabbri', 'evelyn.fabbri@example.com', '+39 320 4420193', 41, 'blue-collar', 'married', 'secondary', 'no', 750.00, 'yes', 'no', NULL),
 (3401922, 'Mason', 'Neri', 'mason.neri@example.com', '+39 366 2211329', 23, 'student', 'single', 'secondary', 'no', 80.00, 'no', 'no', NULL),
 (99881100, 'Ella', 'Riva', 'ella.riva@example.com', '+39 339 2219910', 55, 'entrepreneur', 'married', 'tertiary', 'no', 8120.00, 'yes', 'yes', NULL);
+
+
+-- Insert per Sophia Miller (id: 99017733) - crescita costante
+INSERT INTO INVESTMENT_PROPENSITY_USER (user_id, investment_propensity, timestamp) VALUES
+(99017733, 45.00, '2025-01-15 10:30:00+01'),
+(99017733, 46.50, '2025-02-15 11:15:00+01'),
+(99017733, 48.00, '2025-03-15 09:45:00+01'),
+(99017733, 49.50, '2025-04-15 14:20:00+01'),
+(99017733, 51.00, '2025-05-15 10:00:00+01'),
+(99017733, 52.50, '2025-06-15 11:30:00+01'),
+(99017733, 54.00, '2025-07-15 15:45:00+01'),
+(99017733, 55.50, '2025-08-15 09:20:00+01'),
+(99017733, 57.00, '2025-09-15 13:10:00+01'),
+(99017733, 58.50, '2025-10-15 10:50:00+01'),
+(99017733, 60.00, '2025-11-15 12:00:00+01');
+UPDATE ISBD_USER SET investment_propensity = 60.00 WHERE id = 99017733;
+
+
+-- Insert per Oliver Moore (id: 441100) - con crescita del 10% negli ultimi 3 mesi
+INSERT INTO INVESTMENT_PROPENSITY_USER (user_id, investment_propensity, timestamp) VALUES
+(441100, 65.00, '2025-01-10 14:30:00+01'),
+(441100, 66.00, '2025-02-10 15:20:00+01'),
+(441100, 67.00, '2025-03-10 11:40:00+01'),
+(441100, 68.00, '2025-04-10 16:15:00+01'),
+(441100, 69.00, '2025-05-10 10:25:00+01'),
+(441100, 70.00, '2025-06-10 13:35:00+01'),
+(441100, 71.00, '2025-07-10 09:50:00+01'),
+(441100, 72.00, '2025-08-10 12:05:00+01'),
+(441100, 79.20, '2025-09-10 14:40:00+01'),
+(441100, 87.12, '2025-10-10 10:15:00+01'),
+(441100, 95.83, '2025-11-10 11:30:00+01');
+UPDATE ISBD_USER SET investment_propensity = 95.83 WHERE id = 441100;

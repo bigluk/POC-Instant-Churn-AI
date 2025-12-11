@@ -1,4 +1,4 @@
-from typing import List
+from typing import List, Dict
 
 from fastapi import APIRouter, HTTPException
 
@@ -10,10 +10,9 @@ from services.user_service import UserService
 router = APIRouter(prefix="/api", tags=["users"])
 
 
-@router.post("/predict", response_model=PredictionOutput)
-async def predict(data: ModelInput):
+@router.post("/update-prediction/{user_id}", response_model=PredictionOutput)
+async def update_prediction_for_user(user_id: str, data: ModelInput):
     predictionService = PredictionService()
-    user_id = data.user_id
     pred, probs, pred_prob = predictionService.predict_single(data.model_dump())
 
     userService = UserService()
@@ -26,16 +25,35 @@ async def predict(data: ModelInput):
     )
 
 
+@router.get("/update-predictions", response_model=List[Dict])
+async def update_predictions():
+    userService = UserService()
+    users = userService.get_all_users()
+
+    predictionService = PredictionService()
+    predictions_data = predictionService.predict_batch(users)
+
+    for user, (pred, probabilities, pred_proba) in zip(users, predictions_data):
+        investment_propensity = round(float(probabilities[1]) * 100, 2)
+        userService.update_user_propensity(user['id'], investment_propensity)
+        user['prediction'] = pred
+        user['investment_propensity'] = investment_propensity
+        user['pred_proba'] = pred_proba
+        user['probabilities'] = probabilities
+
+    return users
+
+
 @router.get("/fetch-users", response_model=List[User])
 async def get_all_users():
     service = UserService()
-    return service.get_all_enriched_users()
+    return service.get_all_users()
 
 
 @router.get("/fetch-user/{user_id}", response_model=User)
 async def get_user(user_id: str):
     service = UserService()
-    user = service.get_enriched_user(user_id)
+    user = service.get_user(user_id)
     if not user:
         raise HTTPException(status_code=404, detail="User not found")
     return user
