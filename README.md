@@ -20,7 +20,7 @@ pip install -r requirements.txt
 
 ## 🐘 Installazione Database Postgres + PgAdmin (Docker)
 
-Apri il terminale in: <i>/backend/poc-ai-model/poc-ai-digical-branch</i> e avvia i container tramite Docker Compose:
+Apri il terminale in <i>/backend/poc-ai-model/poc-ai-digical-branch</i> e avvia i container tramite Docker Compose:
 
 `docker compose up -d`
 

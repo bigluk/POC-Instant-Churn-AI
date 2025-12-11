@@ -17,10 +17,8 @@ class User(BaseModel):
     balance: float
     housing: str
     loan: str
-    prediction: Optional[int] = None
+    inclined_to_invest: Optional[int] = None
     investment_propensity: Optional[float]
-    probabilities: Optional[list] = None
-    pred_proba: Optional[float] = None
 
 
 class ModelInput(BaseModel):

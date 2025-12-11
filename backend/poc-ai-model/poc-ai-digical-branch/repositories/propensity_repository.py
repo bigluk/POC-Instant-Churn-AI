@@ -20,15 +20,15 @@ class PropensityRepository:
             )
             return cur.fetchone()
 
-    def add_propensity_entry(self, user_id: str, propensity: float):
+    def add_propensity_entry(self, user_id: str, propensity: float, inclined_to_invest: int):
         with self.conn.cursor() as cur:
             cur.execute(
                 """
                 INSERT INTO INVESTMENT_PROPENSITY_USER 
-                (user_id, investment_propensity)
-                VALUES (%s, %s)
+                (user_id, investment_propensity, inclined_to_invest)
+                VALUES (%s, %s, %s)
                 """,
-                (user_id, propensity)
+                (user_id, propensity, inclined_to_invest)
             )
             self.conn.commit()
 
@@ -36,7 +36,7 @@ class PropensityRepository:
         with self.conn.cursor() as cur:
             cur.execute(
                 """
-                SELECT investment_propensity, timestamp
+                SELECT investment_propensity, inclined_to_invest, timestamp
                 FROM INVESTMENT_PROPENSITY_USER
                 WHERE user_id = %s
                 ORDER BY timestamp ASC

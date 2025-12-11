@@ -17,6 +17,6 @@ class UserService:
     def get_all_users(self) -> List[Dict]:
         return self.user_repo.get_all_users()
 
-    def update_user_propensity(self, user_id: str, propensity: float):
-        self.user_repo.update_investment_propensity(user_id, propensity)
-        self.propensity_repo.add_propensity_entry(user_id, propensity)
+    def update_user_propensity(self, user_id: str, propensity: float, inclined_to_invest: int):
+        self.user_repo.update_investment_propensity(user_id, propensity, inclined_to_invest)
+        self.propensity_repo.add_propensity_entry(user_id, propensity, inclined_to_invest)

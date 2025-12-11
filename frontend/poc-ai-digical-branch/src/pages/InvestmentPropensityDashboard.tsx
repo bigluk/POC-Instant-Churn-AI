@@ -162,7 +162,7 @@ const UserTable: React.FC = () => {
                             <td>{u.email}</td>
                             <td>{u.balance}</td>
                             <td>{u.investment_propensity}%</td>
-                            <td>{u.prediction === 1 ? <FaCheck color="green" /> : <FaTimes color="red" />}</td>
+                            <td>{u.inclined_to_invest === 1 ? <FaCheck color="green" /> : <FaTimes color="red" />}</td>
                         </tr>
                     ))}
                 </tbody>

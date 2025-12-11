@@ -16,10 +16,10 @@ class UserRepository:
             cur.execute("SELECT * FROM ISBD_USERS;")
             return cur.fetchall()
 
-    def update_investment_propensity(self, user_id: str, propensity: float):
+    def update_investment_propensity(self, user_id: str, propensity: float, inclined_to_invest: int):
         with self.conn.cursor() as cur:
             cur.execute(
-                "UPDATE ISBD_USERS SET investment_propensity = %s WHERE id = %s",
-                (propensity, user_id)
+                "UPDATE ISBD_USERS SET investment_propensity = %s, inclined_to_invest = %s WHERE id = %s",
+                (propensity, inclined_to_invest, user_id)
             )
             self.conn.commit()

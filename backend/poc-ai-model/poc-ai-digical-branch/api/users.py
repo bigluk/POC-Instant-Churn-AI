@@ -16,7 +16,7 @@ async def update_prediction_for_user(user_id: str, data: ModelInput):
     pred, probs, pred_prob = predictionService.predict_single(data.model_dump())
 
     userService = UserService()
-    userService.update_user_propensity(user_id, probs[1])
+    userService.update_user_propensity(user_id, probs[1], pred)
 
     return PredictionOutput(
         prediction=pred,
@@ -35,7 +35,7 @@ async def update_predictions():
 
     for user, (pred, probabilities, pred_proba) in zip(users, predictions_data):
         investment_propensity = round(float(probabilities[1]) * 100, 2)
-        userService.update_user_propensity(user['id'], investment_propensity)
+        userService.update_user_propensity(user['id'], investment_propensity, pred)
         user['prediction'] = pred
         user['investment_propensity'] = investment_propensity
         user['pred_proba'] = pred_proba

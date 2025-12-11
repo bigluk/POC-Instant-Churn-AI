@@ -13,5 +13,5 @@ export interface User {
     housing: string;
     loan: string;
     investment_propensity: number;
-    prediction: number;
+    inclined_to_invest: number;
 }
