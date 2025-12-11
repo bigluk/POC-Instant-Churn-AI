@@ -72,7 +72,7 @@ INSERT INTO INVESTMENT_PROPENSITY_USER (user_id, investment_propensity, timestam
 (99017733, 57.00, '2025-09-15 13:10:00+01'),
 (99017733, 58.50, '2025-10-15 10:50:00+01'),
 (99017733, 60.00, '2025-11-15 12:00:00+01');
-UPDATE ISBD_USER SET investment_propensity = 60.00 WHERE id = 99017733;
+UPDATE ISBD_USERS SET investment_propensity = 60.00 WHERE id = 99017733;
 
 
 -- Insert per Oliver Moore (id: 441100) - con crescita del 10% negli ultimi 3 mesi
@@ -88,4 +88,4 @@ INSERT INTO INVESTMENT_PROPENSITY_USER (user_id, investment_propensity, timestam
 (441100, 79.20, '2025-09-10 14:40:00+01'),
 (441100, 87.12, '2025-10-10 10:15:00+01'),
 (441100, 95.83, '2025-11-10 11:30:00+01');
-UPDATE ISBD_USER SET investment_propensity = 95.83 WHERE id = 441100;
+UPDATE ISBD_USERS SET investment_propensity = 95.83 WHERE id = 441100;
