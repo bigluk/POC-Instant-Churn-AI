@@ -9,7 +9,8 @@ DF_COLUMNS = ["age", "job", "marital", "education", "default",
 class DataPreprocessor:
     @staticmethod
     def prepare_input(data: dict) -> pd.DataFrame:
-        df = pd.DataFrame([data], columns=DF_COLUMNS)
+        filtered_data = {k: data.get(k) for k in DF_COLUMNS}
+        df = pd.DataFrame([filtered_data], columns=DF_COLUMNS)
         return prepare_sample(df)
 
     @staticmethod

@@ -12,8 +12,12 @@ router = APIRouter(prefix="/api", tags=["users"])
 
 @router.post("/predict", response_model=PredictionOutput)
 async def predict(data: ModelInput):
-    service = PredictionService()
-    pred, probs, pred_prob = service.predict_single(data.model_dump())
+    predictionService = PredictionService()
+    user_id = data.user_id
+    pred, probs, pred_prob = predictionService.predict_single(data.model_dump())
+
+    userService = UserService()
+    userService.update_user_propensity(user_id, probs[1])
 
     return PredictionOutput(
         prediction=pred,

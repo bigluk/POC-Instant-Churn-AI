@@ -24,6 +24,7 @@ class User(BaseModel):
 
 
 class ModelInput(BaseModel):
+    user_id: int
     age: int
     job: str
     marital: str
