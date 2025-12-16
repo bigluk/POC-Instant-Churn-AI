@@ -130,8 +130,14 @@ const UserTable: React.FC = () => {
                         <th onClick={() => sortData("first_name")}>First Name</th>
                         <th onClick={() => sortData("last_name")}>Last Name</th>
                         <th>Age</th>
-                        <th>Phone</th>
-                        <th>Email</th>
+                        {/*<th>Phone</th>*/}
+                        {/*<th>Email</th>*/}
+                        <th>Job</th>
+                        <th>Martial</th>
+                        <th>Education</th>
+                        <th>Default status</th>
+                        <th>Housing</th>
+                        <th>Loans</th>
                         <th>Balance</th>
                         <th onClick={() => sortData("investment_propensity")}>Investment Propensity (IP)</th>
                         <th>Inclined to Invest</th>
@@ -158,8 +164,14 @@ const UserTable: React.FC = () => {
                             <td>{u.first_name}</td>
                             <td>{u.last_name}</td>
                             <td>{u.age}</td>
-                            <td>{u.phone_number}</td>
-                            <td>{u.email}</td>
+                            {/*<td>{u.phone_number}</td>*/}
+                            {/*<td>{u.email}</td>*/}
+                            <td>{u.job}</td>
+                            <td>{u.marital}</td>
+                            <td>{u.education}</td>
+                            <td>{u.default_status}</td>
+                            <td>{u.housing}</td>
+                            <td>{u.loan}</td>
                             <td>{u.balance}</td>
                             <td>{u.investment_propensity}%</td>
                             <td>{u.inclined_to_invest === 1 ? <FaCheck color="green" /> : <FaTimes color="red" />}</td>
