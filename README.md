@@ -41,6 +41,9 @@ Sempre nella directory <i>/backend/poc-ai-model/poc-ai-digical-branch</i> digita
 
 `uvicorn main:app --reload`
 
+Per calcolare le predizioni per tutti gli utenti invocare la seguente API una volta avviato il server:<br>
+`GET http://localhost:8000/api/update-predictions`
+
 # 🎨 Frontend
 
 Apri il terminale nella directory <i>/frontend/poc-ai-digical-branch</i> ed esegui:

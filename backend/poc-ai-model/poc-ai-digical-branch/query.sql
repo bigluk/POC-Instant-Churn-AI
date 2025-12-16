@@ -91,3 +91,9 @@ INSERT INTO INVESTMENT_PROPENSITY_USER (user_id, investment_propensity, inclined
 (441100, 87.12, 1, '2025-10-10 10:15:00+01'),
 (441100, 95.83, 1, '2025-11-10 11:30:00+01');
 UPDATE ISBD_USERS SET investment_propensity = 95.83, inclined_to_invest = 1 WHERE id = 441100;
+
+
+CREATE ROLE wren_reader LOGIN PASSWORD 'your_secret_password'; -- inserisci la tua password
+GRANT CONNECT ON DATABASE nome_database TO wren_reader;
+GRANT USAGE ON SCHEMA public TO wren_reader;
+GRANT SELECT ON ALL TABLES IN SCHEMA public TO wren_reader;
