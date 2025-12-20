@@ -1,8 +1,9 @@
 from typing import List, Dict
 
+import httpx
 from fastapi import APIRouter, HTTPException
 
-from core.models import PredictionOutput, ModelInput, ChartData, User
+from core.models import PredictionOutput, ModelInput, ChartData, User, TaskResponse, AskRequest
 from services.chart_service import ChartService
 from services.prediction_service import PredictionService
 from services.user_service import UserService
@@ -68,3 +69,27 @@ async def get_user_chart(user_id: str):
         raise HTTPException(status_code=404, detail="No chart data found")
 
     return chart_data
+
+
+@router.post("/ask-to-ai", response_model=TaskResponse)
+async def ask_to_ai(request: AskRequest):
+    payload = {
+        "projectId": request.projectId,
+        "question": request.question
+    }
+
+    if request.threadId is not None:
+        payload["threadId"] = request.threadId
+
+    try:
+        async with httpx.AsyncClient(timeout=60.0) as client:
+            response = await client.post("http://localhost:3000/api/v1/ask", json=payload)
+            response.raise_for_status()
+            data = response.json()
+    except httpx.HTTPStatusError as e:
+        raise HTTPException(status_code=e.response.status_code, detail=str(e))
+    except httpx.RequestError as e:
+        raise HTTPException(status_code=500, detail=f"Connection error: {e}")
+
+    return data
+

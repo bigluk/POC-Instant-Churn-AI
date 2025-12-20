@@ -4,6 +4,7 @@ import { FaCheck, FaTimes } from "react-icons/fa";
 import type { User } from "../types/User";
 import { Link } from "react-router-dom";
 import UserChart from "../components/UserChart";
+import BankChat from "../components/BankChat";
 
 interface SortConfig {
     key: keyof User | null;
@@ -98,6 +99,8 @@ const UserTable: React.FC = () => {
 
     return (
         <Container className="mt-4">
+            <BankChat />
+
             <h2>User List</h2>
 
             <Form className="mb-3 d-flex align-items-end gap-2">
@@ -194,7 +197,6 @@ const UserTable: React.FC = () => {
                     <UserChart data={chartData} userId={selectedUser!} />
                 </Modal.Body>
             </Modal>
-
 
         </Container>
     );

@@ -1,6 +1,6 @@
 from typing import Optional, List
 
-from pydantic import BaseModel
+from pydantic import BaseModel, ConfigDict
 
 
 class User(BaseModel):
@@ -41,3 +41,19 @@ class PredictionOutput(BaseModel):
     prediction: int
     class_probabilities: List[float]
     predicted_class_probability: float
+
+
+class AskRequest(BaseModel):
+    projectId: int
+    question: str
+    threadId: Optional[str] = None
+
+
+class TaskResponse(BaseModel):
+    model_config = ConfigDict(extra="ignore")
+    id: str
+    type: Optional[str] = None
+    explanation: Optional[str] = None
+    threadId: Optional[str] = None
+    sql: Optional[str] = None
+    summary: Optional[str] = None

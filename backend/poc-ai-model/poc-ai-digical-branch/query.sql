@@ -94,6 +94,6 @@ UPDATE ISBD_USERS SET investment_propensity = 95.83, inclined_to_invest = 1 WHER
 
 
 CREATE ROLE wren_reader LOGIN PASSWORD 'your_secret_password'; -- inserisci la tua password
-GRANT CONNECT ON DATABASE nome_database TO wren_reader;
+GRANT CONNECT ON DATABASE poc_isbd TO wren_reader;
 GRANT USAGE ON SCHEMA public TO wren_reader;
 GRANT SELECT ON ALL TABLES IN SCHEMA public TO wren_reader;
