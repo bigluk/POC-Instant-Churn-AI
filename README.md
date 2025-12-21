@@ -1,4 +1,4 @@
-# POC-Instant-Churn-AI
+# POC AI ISBD - Investment Propensity
 The project's goal is to build an AI model to predict users investment propensity
 
 
