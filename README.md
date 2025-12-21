@@ -44,6 +44,13 @@ Sempre nella directory <i>/backend/poc-ai-model/poc-ai-digical-branch</i> digita
 Per calcolare le predizioni per tutti gli utenti invocare la seguente API una volta avviato il server:<br>
 `GET http://localhost:8000/api/update-predictions`
 
+# 🧠 Wren AI
+Seguire la seguente guida per l'installazione locale di Wren AI: https://docs.getwren.ai/oss/installation.
+Una volta seguiti i passaggi accedere dal browser all'indirizzo http://localhost:3000. Tramite l'interfaccia Wren AI connettersi al
+database Postgres precedentemente configurato inserendo nel campo <i>Host</i> il valore `host.docker.internal` e nei campi 
+<i>username</i> e <i>password</i> le credenziali dell'utente con permessi di sola lettura nel database creato tramite comando SQL (vedi file <i>query.sql</i>)
+
+
 # 🎨 Frontend
 
 Apri il terminale nella directory <i>/frontend/poc-ai-digical-branch</i> ed esegui:
@@ -55,4 +62,9 @@ npm run dev
 ### ✅ Il progetto è avviato sulle seguenti porte:
 
 Backend: http://localhost:8000<br>
-Frontend: http://localhost:5173
+Frontend: http://localhost:5173<br>
+PgAdmin: http://localhost:8081<br>
+Wren AI: http://localhost:3000
+
+<b>Nota</b>: al primo avvio dell'applicazione, una volta avviato il backend, tramite Postman (o altro client) invocare
+l'API `GET http://localhost:8000/api/update-predictions` per generare e salvare nel database le prime predizioni del modello di machine learning sviluppato.
