@@ -94,5 +94,22 @@
 }
 
 .green-row td {
-  background-color: #0d8f4519 !important;
+    background-color: #0d8f4519 !important;
+}
+
+.chat-message table {
+    border-collapse: collapse;
+    width: 100%;
+}
+
+.chat-message th,
+.chat-message td {
+    border: 1px solid #ccc;
+    padding: 8px;
+    text-align: left;
+}
+
+.chat-message th {
+    background-color: #f5f5f5;
+    font-weight: 600;
 }

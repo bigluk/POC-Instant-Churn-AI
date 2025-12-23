@@ -1,6 +1,8 @@
 import { useState, useRef } from "react";
 import { Card, Button, Form, InputGroup, Badge, Spinner } from "react-bootstrap";
 import { ChatDots, Dash, Fullscreen, X } from "react-bootstrap-icons";
+import ReactMarkdown from "react-markdown";
+import remarkGfm from "remark-gfm";
 
 type Message = {
     id: number;
@@ -66,7 +68,9 @@ const BankChat: React.FC = () => {
             const operatorMessage: Message = {
                 id: data.id,
                 sender: "operator",
-                text: data.explanation || data.summary || "Nessuna risposta ricevuta",
+                text: data.explanation?.replace(/\\n/g, "\n") ??
+                    data.summary?.replace(/\\n/g, "\n") ??
+                    "Nessuna risposta ricevuta",
                 time: new Date().toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" }),
             };
 
@@ -182,12 +186,11 @@ const BankChat: React.FC = () => {
                                         className={`p-3 rounded-4 ${msg.sender === "user" ? "bg-success text-white" : "bg-white border"}`}
                                         style={{ maxWidth: "75%" }}
                                     >
-                                        {msg.text.split("\\n").map((line, i) => (
-                                            <span key={i}>
-                                                {line}
-                                                <br />
-                                            </span>
-                                        ))}
+                                        <div className="chat-message">
+                                            <ReactMarkdown remarkPlugins={[remarkGfm]}>
+                                                {msg.text}
+                                            </ReactMarkdown>
+                                        </div>
                                         <div className="text-end small opacity-75 mt-1">{msg.time}</div>
                                     </div>
                                 </div>
