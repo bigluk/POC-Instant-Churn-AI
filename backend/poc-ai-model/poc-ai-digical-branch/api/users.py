@@ -1,9 +1,9 @@
+import re
 from typing import List, Dict
 
 import httpx
-from fastapi import APIRouter, HTTPException
-
 from core.models import PredictionOutput, ModelInput, ChartData, User, TaskResponse, AskRequest
+from fastapi import APIRouter, HTTPException
 from services.chart_service import ChartService
 from services.prediction_service import PredictionService
 from services.user_service import UserService
@@ -86,6 +86,8 @@ async def ask_to_ai(request: AskRequest):
             response = await client.post("http://localhost:3000/api/v1/ask", json=payload)
             response.raise_for_status()
             data = response.json()
+        await parse_llm_response(data)
+
     except httpx.HTTPStatusError as e:
         raise HTTPException(status_code=e.response.status_code, detail=str(e))
     except httpx.RequestError as e:
@@ -93,3 +95,21 @@ async def ask_to_ai(request: AskRequest):
 
     return data
 
+
+async def parse_llm_response(data):
+    text_field = None
+    if "summary" in data and data["summary"]:
+        text_field = "summary"
+    elif "explanation" in data and data["explanation"]:
+        text_field = "explanation"
+
+    if text_field:
+        text = data[text_field]
+        pattern = r'\b(\d{4,})\b(?![.,]\d)'
+
+        def replace_id_with_link(match):
+            user_id = match.group(1)
+            return f'[{user_id}](http://localhost:5173/dashboard/{user_id})'
+
+        text_with_links = re.sub(pattern, replace_id_with_link, text)
+        data[text_field] = text_with_links
