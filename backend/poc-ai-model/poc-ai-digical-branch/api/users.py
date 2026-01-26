@@ -105,7 +105,7 @@ async def parse_llm_response(data):
 
     if text_field:
         text = data[text_field]
-        pattern = r'\b(\d{4,})\b(?![.,]\d)(?!\s*[€%])'
+        pattern = r'\b(\d{5,})\b(?![.,]\d)(?!\s*[€%])'
 
         def replace_id_with_link(match):
             user_id = match.group(1)
