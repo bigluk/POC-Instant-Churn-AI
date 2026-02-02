@@ -16,7 +16,7 @@ const BankChat: React.FC = () => {
         {
             id: 1,
             sender: "operator",
-            text: "Ciao! Come posso aiutarla oggi?",
+            text: "Hi, how can I help you today?",
             time: new Date().toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" }),
         },
     ]);
@@ -70,7 +70,7 @@ const BankChat: React.FC = () => {
                 sender: "operator",
                 text: data.explanation?.replace(/\\n/g, "\n") ??
                     data.summary?.replace(/\\n/g, "\n") ??
-                    "Nessuna risposta ricevuta",
+                    "No response received",
                 time: new Date().toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" }),
             };
 
@@ -80,7 +80,7 @@ const BankChat: React.FC = () => {
             const errorMessage: Message = {
                 id: Date.now() + 1,
                 sender: "operator",
-                text: "Si è verificato un errore, riprova più tardi.",
+                text: "An error occurred, please try again later.",
                 time: new Date().toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" }),
             };
             setMessages((prev) => [...prev, errorMessage]);
